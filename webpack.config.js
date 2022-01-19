@@ -1,7 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { DefinePlugin } = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   mode: 'development',
@@ -48,9 +48,7 @@ module.exports = {
       template: path.resolve(__dirname, 'public', 'index.html')
     }),
     new CleanWebpackPlugin(),
-    new DefinePlugin({
-      'process.env.API_URL': 'http://fordevs.herokuapp.com/api/'
-    })
+    new Dotenv()
   ],
   devServer: {
     port: 3000,
