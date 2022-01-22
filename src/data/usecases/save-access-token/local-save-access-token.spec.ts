@@ -1,4 +1,4 @@
-import { SetStorageMock } from '@/data/test/mock-set-storage'
+import { SetStorageMock } from '@/data/test/mock-cache'
 import { LocalSaveAccessToken } from './local-save-access-token'
 
 type SutTypes = {
