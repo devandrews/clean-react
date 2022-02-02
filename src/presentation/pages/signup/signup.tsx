@@ -42,9 +42,17 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
     })
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading) return
+    if (
+      state.isLoading ||
+      state.nameError ||
+      state.emailError ||
+      state.passwordError ||
+      state.passwordConfirmationError
+    ) { return }
     setState({ ...state, isLoading: true })
     await addAccount.add({
       name: state.name,
@@ -58,7 +66,11 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
     <div className={Styles.signup}>
       <LoginHeader />
       <Context.Provider value={{ state, setState }}>
-        <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
+        <form
+          data-testid="form"
+          className={Styles.form}
+          onSubmit={handleSubmit}
+        >
           <h2>Criar Conta</h2>
           <Input type="text" name="name" placeholder="Digite seu nome" />
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
