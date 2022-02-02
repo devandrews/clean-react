@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  RenderResult,
+  waitFor
+} from '@testing-library/react'
 import React from 'react'
 import faker from 'faker'
 
@@ -17,7 +23,9 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
-  const sut = render(<SignUp validation={validationStub} addAccount={addAccountSpy}/>)
+  const sut = render(
+    <SignUp validation={validationStub} addAccount={addAccountSpy} />
+  )
   return {
     sut,
     addAccountSpy
@@ -31,7 +39,7 @@ const simulateValidSubmit = async (
   password = faker.internet.password()
 ): Promise<void> => {
   Helper.populateField(sut, 'name', name)
-  Helper.populateField(sut, 'email',email)
+  Helper.populateField(sut, 'email', email)
   Helper.populateField(sut, 'password', password)
   Helper.populateField(sut, 'passwordConfirmation', password)
   const form = sut.getByTestId('form')
@@ -126,7 +134,12 @@ describe('SignUp Component', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
     await simulateValidSubmit(sut, name, email, password)
-    expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password })
+    expect(addAccountSpy.params).toEqual({
+      name,
+      email,
+      password,
+      passwordConfirmation: password
+    })
   })
 
   test('Should call AddAccount only once', async () => {
@@ -134,5 +147,12 @@ describe('SignUp Component', () => {
     await simulateValidSubmit(sut)
     await simulateValidSubmit(sut)
     expect(addAccountSpy.callsCount).toBe(1)
+  })
+
+  test('Should not call Authentication if form is invalid', async () => {
+    const validationError = faker.random.words()
+    const { sut, addAccountSpy } = makeSut({ validationError })
+    await simulateValidSubmit(sut)
+    expect(addAccountSpy.callsCount).toBe(0)
   })
 })
