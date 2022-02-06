@@ -115,4 +115,15 @@ describe('Login', () => {
     cy.getByTestId('submit').dblclick()
     cy.get('@login.all').should('have.length', 1)
   })
+
+  it('Should not call submit if form is invalid', () => {
+    cy.intercept(xhrRequest, {
+      statusCode: 200,
+      body: {
+        accessToken: faker.random.word()
+      }
+    }).as('login')
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+    cy.get('@login.all').should('have.length', 0)
+  })
 })
