@@ -93,13 +93,26 @@ describe('Login', () => {
         accessToken: faker.random.word()
       }
     }).as('login')
-    cy.getByTestId('email').focus().type('teste@andrews.com')
-    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit').click()
     cy.wait('@login')
     cy.url().should('equal', `${baseUrl}`)
     cy.window().then((window) =>
       assert.isOk(window.localStorage.getItem('accessToken'))
     )
+  })
+
+  it('Should prevent multiple submits', () => {
+    cy.intercept(xhrRequest, {
+      statusCode: 200,
+      body: {
+        accessToken: faker.random.word()
+      }
+    }).as('login')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('submit').dblclick()
+    cy.get('@login.all').should('have.length', 1)
   })
 })
