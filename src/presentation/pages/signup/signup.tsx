@@ -32,8 +32,6 @@ const SignUp: React.FC<Props> = ({
     emailError: '',
     password: '',
     passwordError: '',
-    passwordConfirmation: '',
-    passwordConfirmationError: '',
     mainError: ''
   })
   const navigate = useNavigate()
@@ -42,24 +40,18 @@ const SignUp: React.FC<Props> = ({
     const nameError = validation.validate('name', state.name)
     const emailError = validation.validate('email', state.email)
     const passwordError = validation.validate('password', state.password)
-    const passwordConfirmationError = validation.validate(
-      'passwordConfirmation',
-      state.passwordConfirmation
-    )
 
     setState({
       ...state,
       nameError,
       emailError,
       passwordError,
-      passwordConfirmationError,
       isFormInvalid:
         !!nameError ||
         !!emailError ||
-        !!passwordError ||
-        !!passwordConfirmationError
+        !!passwordError
     })
-  }, [state.name, state.email, state.password, state.passwordConfirmation])
+  }, [state.name, state.email, state.password])
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -73,8 +65,7 @@ const SignUp: React.FC<Props> = ({
       const account = await addAccount.add({
         name: state.name,
         email: state.email,
-        password: state.password,
-        passwordConfirmation: state.passwordConfirmation
+        password: state.password
       })
 
       await saveAccessToken.save(account.accessToken)
@@ -100,11 +91,6 @@ const SignUp: React.FC<Props> = ({
             type="password"
             name="password"
             placeholder="Digite sua senha"
-          />
-          <Input
-            type="password"
-            name="passwordConfirmation"
-            placeholder="Repita sua senha"
           />
           <SubmitButton text="Cadastrar"/>
           <Link data-testid="login-link" to="/login" className={Styles.link}>

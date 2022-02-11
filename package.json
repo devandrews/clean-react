@@ -8,7 +8,7 @@
     "dev": "webpack serve",
     "build": "webpack",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:watch": "npm test -- --watch",
+    "test:watch": "npm test -- --watch --noStackTrace",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "test:cypress": "cypress open",
