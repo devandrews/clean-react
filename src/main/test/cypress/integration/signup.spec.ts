@@ -97,4 +97,26 @@ describe('SignUp', () => {
     FormHelper.testUrl('')
     FormHelper.testLocalStorageItem('accessToken')
   })
+
+  it('Should prevent multiple submits', () => {
+    Http.mockSuccess()
+    cy.getByTestId('name').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('submit').dblclick()
+    FormHelper.testHttpCallsCount(1, 'signup')
+  })
+
+  it('Should not call submit if form is invalid', () => {
+    Http.mockSuccess()
+    cy.getByTestId('email')
+      .focus()
+      .type(faker.internet.email())
+      .type('{enter}')
+    cy.getByTestId('password')
+      .focus()
+      .type(faker.random.alphaNumeric(5))
+      .type('{enter}')
+    FormHelper.testHttpCallsCount(0, 'signup')
+  })
 })
