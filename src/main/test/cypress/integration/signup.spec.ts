@@ -74,4 +74,19 @@ describe('SignUp', () => {
       .should('contain.text', 'Email já está sendo utilizado')
     FormHelper.testUrl('signup')
   })
+
+  it('Should present UnexpectedError on 400', () => {
+    Http.mockUnexpectedError()
+    simulateValidSubmit()
+    cy.wait('@signup')
+    cy.getByTestId('error-wrap')
+      .getByTestId('spinner')
+      .should('not.exist')
+      .getByTestId('main-error')
+      .should(
+        'contain.text',
+        'Algo de errado aconteceu. Tente novamente em breve.'
+      )
+    FormHelper.testUrl('signup')
+  })
 })
